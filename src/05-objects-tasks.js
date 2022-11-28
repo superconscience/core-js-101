@@ -115,7 +115,7 @@ function fromJSON(proto, json) {
  *
  *  For more examples see unit tests.
  */
-
+/*
 const cssSelectorBuilder = {
   elementSelector: '',
   classSelectors: [],
@@ -183,20 +183,51 @@ const cssSelectorBuilder = {
     this.pseudoClassSelectors = [];
   },
 };
+*/
 
-console.log(cssSelectorBuilder.combine(
-  cssSelectorBuilder.element('div').id('main').class('container').class('draggable'),
-  '+',
-  cssSelectorBuilder.combine(
-    cssSelectorBuilder.element('table').id('data'),
-    '~',
-    cssSelectorBuilder.combine(
-      cssSelectorBuilder.element('tr').pseudoClass('nth-of-type(even)'),
-      ' ',
-      cssSelectorBuilder.element('td').pseudoClass('nth-of-type(even)'),
-    ),
-  ),
-));
+const cssSelectorBuilder = {
+  element(/* value */) {
+    throw new Error('Not implemented');
+  },
+
+  id(/* value */) {
+    throw new Error('Not implemented');
+  },
+
+  class(/* value */) {
+    throw new Error('Not implemented');
+  },
+
+  attr(/* value */) {
+    throw new Error('Not implemented');
+  },
+
+  pseudoClass(/* value */) {
+    throw new Error('Not implemented');
+  },
+
+  pseudoElement(/* value */) {
+    throw new Error('Not implemented');
+  },
+
+  combine(/* selector1, combinator, selector2 */) {
+    throw new Error('Not implemented');
+  },
+};
+
+// console.log(cssSelectorBuilder.combine(
+//   cssSelectorBuilder.element('div').id('main').class('container').class('draggable'),
+//   '+',
+//   cssSelectorBuilder.combine(
+//     cssSelectorBuilder.element('table').id('data'),
+//     '~',
+//     cssSelectorBuilder.combine(
+//       cssSelectorBuilder.element('tr').pseudoClass('nth-of-type(even)'),
+//       ' ',
+//       cssSelectorBuilder.element('td').pseudoClass('nth-of-type(even)'),
+//     ),
+//   ),
+// ));
 
 module.exports = {
   Rectangle,
