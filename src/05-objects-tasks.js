@@ -20,8 +20,12 @@
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+  this.getArea = function getArea() {
+    return this.width * this.height;
+  };
 }
 
 
@@ -35,8 +39,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 
@@ -51,10 +55,12 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  const props = JSON.parse(json);
+  const obj = Object.create(proto);
+  Object.entries(props).forEach(([key, value]) => { obj[key] = value; });
+  return obj;
 }
-
 
 /**
  * Css selectors builder
@@ -111,35 +117,86 @@ function fromJSON(/* proto, json */) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  elementSelector: '',
+  classSelectors: [],
+  idSelector: '',
+  attrSelectors: [],
+  pseudoClassSelectors: [],
+  pseudoElementSelector: '',
+  element(value) {
+    this.elementSelector = value;
+    return this;
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    this.idSelector = `#${value}`;
+    return this;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    this.classSelectors.push(`.${value}`);
+    return this;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    this.attrSelectors.push(`[${value}]`);
+    return this;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    this.pseudoClassSelectors.push(`:${value}`);
+    return this;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    this.pseudoElementSelector = `::${value}`;
+    return this;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    return [selector1, combinator, selector2].join(' ');
+  },
+
+  toString() {
+    return this.stringify();
+  },
+
+  stringify() {
+    const selector = [
+      this.elementSelector,
+      this.idSelector,
+      this.classSelectors.join(''),
+      this.attrSelectors.join(''),
+      this.pseudoClassSelectors.join(''),
+      this.pseudoElementSelector,
+    ].join('');
+    this.reset();
+    return selector;
+  },
+
+  reset() {
+    this.elementSelector = '';
+    this.idSelector = '';
+    this.pseudoElementSelector = '';
+    this.classSelectors = [];
+    this.attrSelectors = [];
+    this.pseudoClassSelectors = [];
   },
 };
 
+console.log(cssSelectorBuilder.combine(
+  cssSelectorBuilder.element('div').id('main').class('container').class('draggable'),
+  '+',
+  cssSelectorBuilder.combine(
+    cssSelectorBuilder.element('table').id('data'),
+    '~',
+    cssSelectorBuilder.combine(
+      cssSelectorBuilder.element('tr').pseudoClass('nth-of-type(even)'),
+      ' ',
+      cssSelectorBuilder.element('td').pseudoClass('nth-of-type(even)'),
+    ),
+  ),
+));
 
 module.exports = {
   Rectangle,
