@@ -28,10 +28,15 @@
  *      .catch((error) => console.log(error.message)) // 'Error: Wrong parameter is passed!
  *                                                    //  Ask her again.';
  */
-function willYouMarryMe(/* isPositiveAnswer */) {
-  throw new Error('Not implemented');
+function willYouMarryMe(isPositiveAnswer) {
+  if (typeof isPositiveAnswer === 'undefined') {
+    return Promise.reject(new Error('Wrong parameter is passed! Ask her again.'));
+  }
+  if (isPositiveAnswer) {
+    return Promise.resolve('Hooray!!! She said "Yes"!');
+  }
+  return Promise.resolve('Oh no, she said "No".');
 }
-
 
 /**
  * Return Promise object that should be resolved with array containing plain values.
@@ -48,8 +53,8 @@ function willYouMarryMe(/* isPositiveAnswer */) {
  *    })
  *
  */
-function processAllPromises(/* array */) {
-  throw new Error('Not implemented');
+function processAllPromises(array) {
+  return Promise.all(array);
 }
 
 /**
@@ -71,8 +76,8 @@ function processAllPromises(/* array */) {
  *    })
  *
  */
-function getFastestPromise(/* array */) {
-  throw new Error('Not implemented');
+function getFastestPromise(array) {
+  return Promise.race(array);
 }
 
 /**
@@ -92,9 +97,14 @@ function getFastestPromise(/* array */) {
  *    });
  *
  */
-function chainPromises(/* array, action */) {
-  throw new Error('Not implemented');
+async function chainPromises(array, action) {
+  return array.reduce(async (res, p) => {
+    const prev = await res.catch((err) => err);
+    const current = await p.catch((err) => err);
+    return action(prev, current);
+  });
 }
+
 
 module.exports = {
   willYouMarryMe,
