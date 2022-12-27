@@ -296,8 +296,18 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const sum = ccn.toString().split('').reverse().reduce((s, n, i) => {
+    let num = Number(n);
+    if ((i + 1) % 2 === 0) {
+      num *= 2;
+      if (num > 9) {
+        num -= 9;
+      }
+    }
+    return s + num;
+  }, 0);
+  return (sum % 10 === 0);
 }
 
 /**
@@ -457,8 +467,18 @@ function getCommonDirectoryPath(pathes) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const m3 = [];
+  for (let idx1 = 0; idx1 < m1.length; idx1 += 1) {
+    m3[idx1] = [];
+    for (let idx2 = 0; idx2 < m2[0].length; idx2 += 1) {
+      m3[idx1][idx2] = 0;
+      for (let idx3 = 0; idx3 < m1[0].length; idx3 += 1) {
+        m3[idx1][idx2] += m1[idx1][idx3] * m2[idx3][idx2];
+      }
+    }
+  }
+  return m3;
 }
 
 
@@ -492,90 +512,33 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
-  // const X = 'X';
-  // const O = '0';
-  // const winPositionsList = [
-  //   [0, 1, 2],
-  //   [3, 4, 5],
-  //   [6, 7, 8],
-  //   [0, 3, 6],
-  //   [1, 4, 7],
-  //   [2, 5, 8],
-  //   [0, 4, 8],
-  //   [2, 4, 6],
-  // ];
-  // let xListIndex = 0;
-  // let oListIndex = 0;
-  // let xPositions = winPositionsList.map((x) => [...x]);
-  // let oPositions = winPositionsList.map((x) => [...x]);
-  // position.forEach((row, rowIndex) => {
-  //   row.forEach((value, valueIndex) => {
-  //     const index = rowIndex * 3 + valueIndex;
-  //     if (value === X) {
-  //       xPositions = xPositions.filter((item) => item[xListIndex] === index);
-  //       console.log('X', xPositions);
-  //       xListIndex += 1;
-  //     } else if (value === O) {
-  //       oPositions = oPositions.filter((item) => item[oListIndex] === index);
-  //       oListIndex += 1;
-  //     }
-  //   });
-  // });
-  // return [X, O].reduce(((winner, value) => {
-  //
-  // }, undefined));
-  // const winMatrixes = [
-  //   [
-  //     1, 1, 1,
-  //     0, 0, 0,
-  //     0, 0, 0,
-  //   ],
-  //   [
-  //     0, 0, 0,
-  //     1, 1, 1,
-  //     0, 0, 0,
-  //   ],
-  //   [
-  //     0, 0, 0,
-  //     0, 0, 0,
-  //     1, 1, 1,
-  //   ],
-  //   [
-  //     1, 0, 0,
-  //     1, 0, 0,
-  //     1, 0, 0,
-  //   ],
-  //   [
-  //     0, 1, 0,
-  //     0, 1, 0,
-  //     0, 1, 0,
-  //   ],
-  //   [
-  //     0, 0, 1,
-  //     0, 0, 1,
-  //     0, 0, 1,
-  //   ],
-  //   [
-  //     1, 0, 0,
-  //     0, 1, 0,
-  //     0, 0, 1,
-  //   ],
-  //   [
-  //     0, 0, 1,
-  //     0, 1, 0,
-  //     1, 0, 0,
-  //   ],
-  // ];
+function evaluateTicTacToePosition(position) {
+  const values = ['X', '0'];
+
+  for (let i = 0; i < values.length; i += 1) {
+    const value = values[i];
+
+    if (position.map((p) => p.join('')).includes(value.repeat(3))) {
+      return value;
+    }
+
+    if (position[0][0] === value && position[1][1] === value && position[2][2] === value) {
+      return value;
+    }
+
+    if (position[2][0] === value && position[1][1] === value && position[0][2] === value) {
+      return value;
+    }
+
+    for (let k = 0; k < 3; k += 1) {
+      if (position[0][k] === value && position[1][k] === value && position[2][k] === value) {
+        return value;
+      }
+    }
+  }
+
+  return undefined;
 }
-// const X = 'X';
-// const O = '0';
-// evaluateTicTacToePosition([
-//   [O, O, X],
-//   [X, O, X],
-//   [O, X, X],
-// ]);
 
 module.exports = {
   getFizzBuzz,
